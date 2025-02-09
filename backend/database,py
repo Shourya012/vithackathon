@@ -1,0 +1,57 @@
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
+import bcrypt
+
+# ✅ Database Configuration (Replace with your actual details)
+DATABASE_URL = "mysql+mysqlconnector://root:2005@localhost/nexathon"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+# ✅ User Model
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    password = Column(String(255), nullable=False)  # Hashed password
+
+# ✅ Function to Hash Password
+def hash_password(password: str) -> str:
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode(), salt)
+    return hashed.decode()
+
+# ✅ Insert a User
+def insert_user():
+    # Get user input
+    name = input("Enter your name: ")
+    email = input("Enter your email: ")
+    password = input("Enter your password: ")
+
+    # Hash the password
+    hashed_password = hash_password(password)
+
+    # Create a new session
+    session = SessionLocal()
+
+    # Insert user into the database
+    try:
+        new_user = User(name=name, email=email, password=hashed_password)
+        session.add(new_user)
+        session.commit()
+        print("\n✅ User Registered Successfully!")
+        print(f"🆔 User ID: {new_user.id}")
+        print(f"👤 Name: {new_user.name}")
+        print(f"📧 Email: {new_user.email}")
+    except Exception as e:
+        session.rollback()
+        print("❌ Error:", e)
+    finally:
+        session.close()
+
+# ✅ Run the Function
+if __name__ == "__main__":
+    insert_user()

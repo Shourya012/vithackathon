@@ -1,22 +1,15 @@
-import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
-import { AuthContext } from "../AuthContext"; // Make sure this path is correct!
+import { useState } from "react";
 import axios from "axios";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext); // Ensure context is not undefined
 
-  if (!authContext) {
-    console.error("AuthContext is undefined! Make sure AuthProvider wraps your components.");
-    return null; // Prevent crash
-  }
-
-  const { login } = authContext;
+  // ✅ State for form inputs
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
@@ -25,9 +18,9 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     console.log("Login Data:", data);
-
+    
     const storedUser = JSON.parse(localStorage.getItem("user"));
-
+    
     if (!storedUser) {
       alert("No user found. Please sign up first.");
       navigate("/signup");
@@ -35,16 +28,17 @@ const Login = () => {
     }
 
     if (storedUser.email === data.email && storedUser.password === data.password) {
-      localStorage.setItem("authenticated", "true");
-      login(storedUser);
-      navigate("/dashboard");
+      localStorage.setItem("loggedIn", "true"); // ✅ Simulating authentication
+      navigate("/profile");
       return;
+    } else {
+      alert("Invalid email or password. Try again!");
     }
 
     try {
       const response = await axios.post("http://localhost:5000/login", data);
       if (response.data.success) {
-        login(response.data.user);
+        localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Store user in localStorage
         navigate("/dashboard");
       } else {
         alert(response.data.message);

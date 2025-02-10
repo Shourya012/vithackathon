@@ -4,6 +4,8 @@ import axios from "axios";
 const NutritionPlan = () => {
   const [nutritionPlan, setNutritionPlan] = useState(null);
 
+  const bgImageUrl = "https://tse2.mm.bing.net/th?id=OIP.rmPRixai0bGITCeSAZAXrQHaEA&pid=Api&P=0&h=180"; // Replace with your preferred background image
+
   useEffect(() => {
     axios.get("http://localhost:5000/generate-nutrition-plan")
       .then(response => setNutritionPlan(response.data))
@@ -11,8 +13,11 @@ const NutritionPlan = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 shadow-lg rounded-xl w-full max-w-lg">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImageUrl})` }}
+    >
+      <div className="bg-white p-8 shadow-lg rounded-xl w-full max-w-lg bg-opacity-80">
         <h2 className="text-2xl font-bold text-center mb-6">Your Personalized Nutrition Plan</h2>
         {nutritionPlan ? (
           <div className="space-y-4">

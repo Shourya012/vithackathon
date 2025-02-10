@@ -13,7 +13,7 @@ const Signup = () => {
   };
 
   // Background image URL
-  const bgImageUrl = "https://images.unsplash.com/photo-1564866655-d2b42236ff93"; // Use your own image link here
+  const bgImageUrl = "https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg"; // Use your own image link here
 
   return (
     <motion.div

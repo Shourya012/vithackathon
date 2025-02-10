@@ -13,9 +13,14 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const bgImageUrl = "https://tse1.mm.bing.net/th?id=OIP.TCW9uWHn5-iCBIS-qtf26QHaEJ&pid=Api&P=0&h=180"; // Replace with your preferred background image
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+    <div
+      className="flex justify-center items-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImageUrl})` }}
+    >
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md bg-opacity-80">
         {/* Profile Picture */}
         <div className="flex justify-center">
           <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 text-xl font-bold">

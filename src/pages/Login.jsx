@@ -1,19 +1,58 @@
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
+import { AuthContext } from "../AuthContext"; // Make sure this path is correct!
+import axios from "axios";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext); // Ensure context is not undefined
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
-    navigate("/dashboard"); // Redirect to dashboard after login
+  if (!authContext) {
+    console.error("AuthContext is undefined! Make sure AuthProvider wraps your components.");
+    return null; // Prevent crash
+  }
+
+  const { login } = authContext;
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Background image URL
-  const bgImageUrl = "https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg"; // Use your own image link here
+  const onSubmit = async (data) => {
+    console.log("Login Data:", data);
+
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!storedUser) {
+      alert("No user found. Please sign up first.");
+      navigate("/signup");
+      return;
+    }
+
+    if (storedUser.email === data.email && storedUser.password === data.password) {
+      localStorage.setItem("authenticated", "true");
+      login(storedUser);
+      navigate("/dashboard");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5000/login", data);
+      if (response.data.success) {
+        login(response.data.user);
+        navigate("/dashboard");
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      alert("Invalid email or password. Try again!");
+    }
+  };
 
   return (
     <motion.div
@@ -21,10 +60,10 @@ const Login = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       className="flex justify-center items-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${bgImageUrl})` }}
+      style={{ backgroundImage: `url('https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg')`, filter: "brightness(50%)" }}
     >
-      <div className="bg-white bg-opacity-80 p-8 rounded-2xl shadow-lg w-96 border border-gray-200 z-10">
-        <h2 className="text-3xl font-bold text-center text-green-700 mb-6">Welcome Back</h2>
+      <div className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg w-96 border border-gray-200 z-10">
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Welcome Back</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <Controller
@@ -32,7 +71,7 @@ const Login = () => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Email" type="email" fullWidth variant="outlined" className="rounded-lg" />
+              <TextField {...field} label="Email" type="email" fullWidth variant="outlined" required onChange={handleChange} />
             )}
           />
 
@@ -41,7 +80,7 @@ const Login = () => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Password" type="password" fullWidth variant="outlined" className="rounded-lg" />
+              <TextField {...field} label="Password" type="password" fullWidth variant="outlined" required onChange={handleChange} />
             )}
           />
 

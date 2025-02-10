@@ -1,71 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState([{ sender: "bot", text: "Hi! How can I assist you today?" }]);
-  const [input, setInput] = useState("");
+  useEffect(() => {
+    // Inject Botpress Webchat
+    const script1 = document.createElement("script");
+    script1.src = "https://cdn.botpress.cloud/webchat/v2.2/inject.js";
+    script1.async = true;
+    document.body.appendChild(script1);
 
-  const handleSend = () => {
-    if (input.trim() === "") return;
-    setMessages([...messages, { sender: "user", text: input }]);
-    setInput("");
+    // Inject Botpress Chatbot Behavior Script
+    const script2 = document.createElement("script");
+    script2.src = "https://files.bpcontent.cloud/2025/02/10/10/20250210101503-7I80ARSF.js";
+    script2.async = true;
+    document.body.appendChild(script2);
 
-    // Simulate bot response
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { sender: "bot", text: "I'm processing your request..." }]);
-    }, 1000);
-  };
-
-  const handleVoiceInput = () => {
-    const recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
-
-    recognition.onresult = (event) => {
-      const voiceText = event.results[0][0].transcript;
-      setInput(voiceText);
+    script1.onload = () => {
+      window.botpressWebChat.init({
+        botId: "your-bot-id", // Replace with your actual Botpress bot ID
+        host: "https://cdn.botpress.cloud/webchat",
+        showCloseButton: true,
+        showOpenButton: false, // Hide Botpress default button
+      });
     };
-  };
+  }, []);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      {/* Chat Messages */}
-      <div className="h-60 overflow-y-auto p-2 border-b border-gray-300 space-y-2">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-lg text-sm max-w-[80%] ${
-              msg.sender === "user"
-                ? "bg-blue-500 text-white self-end ml-auto"
-                : "bg-gray-200 text-gray-800"
-            }`}
-          >
-            {msg.text}
-          </div>
-        ))}
-      </div>
-
-      {/* Chat Input */}
-      <div className="flex items-center mt-2">
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          placeholder="Type a message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          onClick={handleSend}
-          className="ml-2 bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg"
-        >
-          Send
-        </button>
-        <button
-          onClick={handleVoiceInput}
-          className="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 p-2 rounded-lg"
-        >
-          🎙️
-        </button>
-      </div>
+    <div>
+      {/* Keep the existing chatbot button */}
+      <button
+        onClick={() => window.botpressWebChat.sendEvent({ type: "show" })}
+        className="fixed bottom-5 right-5 bg-blue-500 text-white p-3 rounded-full shadow-lg"
+      >
+        💬 Chat
+      </button>
     </div>
   );
 };

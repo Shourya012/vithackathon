@@ -12,7 +12,7 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    // Fetch user details from localStorage (assuming authentication is stored here)
+    // ✅ Fetch user details from localStorage (assuming authentication is stored here)
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setFormData((prev) => ({
@@ -28,12 +28,14 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data
-    localStorage.removeItem("authenticated"); // Clear login session
-    navigate("/login"); // Redirect to login page
+    // ✅ Clear user data and redirect to login
+    localStorage.removeItem("user");
+    localStorage.removeItem("authenticated");
+    navigate("/login");
   };
 
-  const bgImageUrl = "https://tse1.mm.bing.net/th?id=OIP.TCW9uWHn5-iCBIS-qtf26QHaEJ&pid=Api&P=0&h=180";
+  const bgImageUrl =
+    "https://tse1.mm.bing.net/th?id=OIP.TCW9uWHn5-iCBIS-qtf26QHaEJ&pid=Api&P=0&h=180";
 
   return (
     <div
@@ -61,8 +63,9 @@ const Profile = () => {
               value={formData.fullName}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-4 py-2 rounded-lg border 
-              ${isEditing ? "border-gray-400" : "bg-gray-100"} focus:outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border ${
+                isEditing ? "border-gray-400" : "bg-gray-100"
+              } focus:outline-none`}
             />
           </div>
 
@@ -85,8 +88,9 @@ const Profile = () => {
               value={formData.age}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-4 py-2 rounded-lg border 
-              ${isEditing ? "border-gray-400" : "bg-gray-100"} focus:outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border ${
+                isEditing ? "border-gray-400" : "bg-gray-100"
+              } focus:outline-none`}
             />
           </div>
 
@@ -97,8 +101,9 @@ const Profile = () => {
               value={formData.healthGoals}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-4 py-2 rounded-lg border 
-              ${isEditing ? "border-gray-400" : "bg-gray-100"} focus:outline-none`}
+              className={`w-full px-4 py-2 rounded-lg border ${
+                isEditing ? "border-gray-400" : "bg-gray-100"
+              } focus:outline-none`}
             ></textarea>
           </div>
 
@@ -106,13 +111,14 @@ const Profile = () => {
           <button
             type="button"
             onClick={() => setIsEditing(!isEditing)}
-            className={`w-full py-3 rounded-lg text-white font-semibold text-lg shadow-md transition-all
-              ${isEditing ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"}`}
+            className={`w-full py-3 rounded-lg text-white font-semibold text-lg shadow-md transition-all ${
+              isEditing ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"
+            }`}
           >
             {isEditing ? "Save Changes" : "Edit Profile"}
           </button>
 
-          {/* Logout Button */}
+          {/* ✅ Fixed Logout Button */}
           <button
             type="button"
             onClick={handleLogout}

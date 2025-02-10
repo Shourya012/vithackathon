@@ -1,15 +1,21 @@
+from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
+from pydantic import BaseModel
 import bcrypt
 
-# ✅ Database Configuration (Replace with your actual details)
-DATABASE_URL = "mysql+mysqlconnector://root:2005@localhost/nexathon"
+# ✅ FastAPI App Setup
+app = FastAPI()
 
+# ✅ Database Configuration (Replace with your actual details)
+DATABASE_URL = "mysql+mysqlconnector://root:2005@localhost/vithackathon_db"
+
+# SQLAlchemy Setup
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# ✅ User Model
+# ✅ User Model (SQLAlchemy)
 class User(Base):
     __tablename__ = "users"
 
@@ -18,40 +24,58 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), nullable=False)  # Hashed password
 
+
 # ✅ Function to Hash Password
 def hash_password(password: str) -> str:
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode(), salt)
     return hashed.decode()
 
-# ✅ Insert a User
-def insert_user():
-    # Get user input
-    name = input("Enter your name: ")
-    email = input("Enter your email: ")
-    password = input("Enter your password: ")
-
+# ✅ Function to Create a New User
+def create_user(db_session, name: str, email: str, password: str):
     # Hash the password
     hashed_password = hash_password(password)
 
-    # Create a new session
-    session = SessionLocal()
+    # Create new user record
+    db_user = User(name=name, email=email, password=hashed_password)
+    db_session.add(db_user)
+    db_session.commit()
+    db_session.refresh(db_user)
 
-    # Insert user into the database
+    return db_user
+
+
+# ✅ Pydantic Model for User Registration
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+
+# ✅ Dependency to Get DB Session
+def get_db():
+    db = SessionLocal()
     try:
-        new_user = User(name=name, email=email, password=hashed_password)
-        session.add(new_user)
-        session.commit()
-        print("\n✅ User Registered Successfully!")
-        print(f"🆔 User ID: {new_user.id}")
-        print(f"👤 Name: {new_user.name}")
-        print(f"📧 Email: {new_user.email}")
-    except Exception as e:
-        session.rollback()
-        print("❌ Error:", e)
+        yield db
     finally:
-        session.close()
+        db.close()
 
-# ✅ Run the Function
-if __name__ == "__main__":
-    insert_user()
+# ✅ Endpoint to Register a User
+@app.post("/register")
+async def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    # Check if the email is already registered
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Create new user
+    db_user = create_user(db, name=user.name, email=user.email, password=user.password)
+
+    return {
+        "message": "User registered successfully!",
+        "user_id": db_user.id,
+        "name": db_user.name,
+        "email": db_user.email
+    }
+
+# ✅ Run the FastAPI Server
+# Run with: uvicorn filename:app --reload

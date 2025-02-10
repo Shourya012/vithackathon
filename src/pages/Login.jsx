@@ -2,50 +2,27 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 
 const Login = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // ✅ State for form inputs
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  useEffect(() => {
+    // ✅ If already logged in, redirect to dashboard
+    if (localStorage.getItem("loggedIn") === "true") {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     console.log("Login Data:", data);
-    
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    
-    if (!storedUser) {
-      alert("No user found. Please sign up first.");
-      navigate("/signup");
-      return;
-    }
 
-    if (storedUser.email === data.email && storedUser.password === data.password) {
-      localStorage.setItem("loggedIn", "true"); // ✅ Simulating authentication
-      navigate("/profile");
-      return;
-    } else {
-      alert("Invalid email or password. Try again!");
-    }
+    // ✅ Store login state
+    localStorage.setItem("loggedIn", "true");
 
-    try {
-      const response = await axios.post("http://localhost:5000/login", data);
-      if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Store user in localStorage
-        navigate("/dashboard");
-      } else {
-        alert(response.data.message);
-      }
-    } catch (error) {
-      alert("Invalid email or password. Try again!");
-    }
+    // ✅ Redirect to dashboard
+    navigate("/dashboard");
   };
 
   return (
@@ -65,7 +42,7 @@ const Login = () => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Email" type="email" fullWidth variant="outlined" required onChange={handleChange} />
+              <TextField {...field} label="Email" type="email" fullWidth variant="outlined" required />
             )}
           />
 
@@ -74,7 +51,7 @@ const Login = () => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Password" type="password" fullWidth variant="outlined" required onChange={handleChange} />
+              <TextField {...field} label="Password" type="password" fullWidth variant="outlined" required />
             )}
           />
 

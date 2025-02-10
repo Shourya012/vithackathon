@@ -7,7 +7,7 @@ const NutritionPlan = () => {
   const bgImageUrl = "https://tse2.mm.bing.net/th?id=OIP.rmPRixai0bGITCeSAZAXrQHaEA&pid=Api&P=0&h=180"; // Replace with your preferred background image
 
   useEffect(() => {
-    axios.get("http://localhost:5000/generate-nutrition-plan")
+    axios.get("mysql+mysqlconnector://root:2005@localhost/vit")
       .then(response => setNutritionPlan(response.data))
       .catch(error => console.error("Error fetching nutrition plan:", error));
   }, []);

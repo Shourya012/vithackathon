@@ -2,34 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
-import axios from "axios";
 
 const Signup = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     console.log("Signup Data:", data);
-    
-    // Save user data locally
-    localStorage.setItem("user", JSON.stringify({
-      fullName: data.name,
-      email: data.email,
-      age: "",
-      healthGoals: ""
-    }));
 
-    try {
-      const response = await axios.post("http://localhost:5000/signup", data);
-      if (response.data.success) {
-        alert("Signup successful! Please login.");
-        navigate("/login");
-      } else {
-        alert(response.data.message);
-      }
-    } catch (error) {
-      alert("Signup failed. Try again!");
-    }
+    // ✅ No authentication, just redirect to login page
+    navigate("/login");
   };
 
   return (
@@ -44,7 +26,6 @@ const Signup = () => {
         <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Create an Account</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Full Name Field */}
           <Controller
             name="name"
             control={control}
@@ -54,7 +35,6 @@ const Signup = () => {
             )}
           />
 
-          {/* Email Field */}
           <Controller
             name="email"
             control={control}
@@ -64,7 +44,6 @@ const Signup = () => {
             )}
           />
 
-          {/* Password Field */}
           <Controller
             name="password"
             control={control}
@@ -74,13 +53,11 @@ const Signup = () => {
             )}
           />
 
-          {/* Signup Button */}
           <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition shadow-md transform hover:scale-105">
             Sign Up
           </button>
         </form>
 
-        {/* Login Link */}
         <p className="text-center text-gray-600 mt-4">
           Already have an account? <Link to="/login" className="text-green-700 font-medium hover:underline">Login</Link>
         </p>

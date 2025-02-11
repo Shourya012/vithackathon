@@ -18,11 +18,11 @@ const Signup = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0.8, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       className="flex justify-center items-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url('https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg')`, filter: "brightness(50%)" }}
+      style={{ backgroundImage: `url('https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg')`, filter: "brightness(80%)  contrast(110%)" }}
     >
       <div className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg w-96 border border-gray-200 z-10">
         <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Create an Account</h2>

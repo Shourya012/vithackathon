@@ -29,3 +29,15 @@ code {
 .input-style {
   @apply w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500;
 }
+.overlay {
+  background: rgba(0, 0, 0, 0.2);  /* Reduce darkness */
+}
+.form-container {
+  opacity: 1 !important;  /* Ensure full visibility */
+}
+.background {
+  filter: brightness(1.1); /* Increase brightness */
+}
+.backdrop {
+  backdrop-filter: none !important;
+}

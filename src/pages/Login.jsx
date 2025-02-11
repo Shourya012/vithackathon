@@ -29,13 +29,13 @@ const Login = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0.8, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       className="flex justify-center items-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url('https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg')`, filter: "brightness(50%)" }}
+      style={{ backgroundImage: `url('https://tse3.mm.bing.net/th?id=OIP.YOq0-68LQfnyzl0MVX9a7gHaDb&pid=Api&P=0&h=180/nutrition.jpg')`, filter: "brightness(80%) contrast(110%)" }}
     >
-      <div className="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg w-96 border border-gray-200 z-10">
+      <div className="bg-white bg-opacity-95 p-10 rounded-2xl shadow-3xl w-96 border border-gray-300 z-20">
         <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Welcome Back</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

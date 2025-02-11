@@ -3,8 +3,10 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import Auth from "../Auth";
 
 const Login = () => {
+  <Auth isSignup={false} />;
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 

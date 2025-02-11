@@ -12,7 +12,7 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    // ✅ Fetch user details from localStorage (assuming authentication is stored here)
+    // Fetch user details from localStorage (if stored)
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setFormData((prev) => ({
@@ -28,7 +28,7 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    // ✅ Clear user data and redirect to login
+    // Clear user session and redirect to login
     localStorage.removeItem("user");
     localStorage.removeItem("authenticated");
     navigate("/login");
@@ -118,7 +118,7 @@ const Profile = () => {
             {isEditing ? "Save Changes" : "Edit Profile"}
           </button>
 
-          {/* ✅ Fixed Logout Button */}
+          {/* Logout Button */}
           <button
             type="button"
             onClick={handleLogout}

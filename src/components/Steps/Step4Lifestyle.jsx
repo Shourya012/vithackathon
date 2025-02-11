@@ -32,7 +32,7 @@ const Step4Lifestyle = ({ onNext }) => {
           )}
         />
 
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Next</button>
+       
       </form>
     </motion.div>
   );

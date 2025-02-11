@@ -2,8 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { motion } from "framer-motion";
+import Auth from "../Auth";
 
 const Signup = () => {
+  <Auth isSignup={true} />;
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 
